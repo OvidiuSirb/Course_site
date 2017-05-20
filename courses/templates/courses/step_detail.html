@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% load course_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}
+            {{ step.title }} - {{ step.course.title }}
+            {% endblock %}
+    </title>
+</head>
+<body>
+{% block content %}
+<article>
+    <h2>
+        <a href="{% url 'courses:detail' pk=step.course.pk %}">{{ step.course.title }}</a>
+    </h2>
+    <h3>{{ step.title }}</h3>
+    {% with con=step.content %}         {# con-variabila #}
+        {{ con|linebreaks }} Content: {{ con|wordcount }} words.
+        Approximated time to finish: {{ con|wordcount|time_estimate }} minute{{ con|wordcount|time_estimate|pluralize }}.
+    {% endwith %}
+</article>
+{% endblock %}
+</body>
+</html>

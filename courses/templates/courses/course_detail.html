@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% load humanize %}    {# de la installed_apps humanize #}
+{% load course_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}
+            {{ course.title }}
+            {% endblock %}
+    </title>
+</head>
+<body>
+    {% block content %}
+    <article>
+    <h2>
+        {{ course.title }}
+    </h2>
+        {{ course.description|markdown_to_html }}  {# safe filter-html to normal text #}
+
+        <p>There are {{ course.step_set.all.count|apnumber }} step{{ course.step_set.count|pluralize }}.</p> {# |length-causes a large database query to be run; folosim .count;apnumber-letters #}
+        <p>These are the steps in this course: {{ course.step_set.all|join:", " }}</p> {#join- ca sa nu mi-l dea ca <QuerySet [<Step: Using the shell>, <Step: Stringuri si de-alea>]> #}
+    <section>
+        {% for step in course.step_set.all %}
+            <h3><a href="{%  url 'courses:step' course_pk=step.course.pk step_pk=step.pk %}" >{{ step.title }}</a></h3>
+            {{ step.description }}
+        {#     <h2>There are {% conjugate_is() %} </h2>#}
+        {% endfor %}
+    </section>
+    </article>
+    {% endblock %}
+</body>
+</html>
